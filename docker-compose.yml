@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  python-api:
+    image: python_api:latest
+    working_dir: /opt/app
+    env_file:
+      - ./.env
+    environment:
+      - POSE=pose
+    ports:
+      - 5000:5000
+  nginx:
+    image: nginx:1.21.3
+    volumes:
+      - ./nginx/python_api.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8080:80
+    depends_on:
+      - python-api
+    links:
+      - python-api
