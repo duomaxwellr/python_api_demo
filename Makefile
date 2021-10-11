@@ -6,3 +6,8 @@ build:
 
 run:
 	docker-compose up
+
+clean:
+	docker image prune --force
+	docker builder prune --force
+	docker container prune --force
