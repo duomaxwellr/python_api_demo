@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, request, Response
+from dotenv import load_dotenv
 import os
 import sqlite3
 from sqlite3 import Error
 
-SQLITE_FILE = os.path.join( os.environ.get("DB_FILE_PATH"), os.environ.get("DB_FILE_NAME") )
+load_dotenv( dotenv_path=".env", override=True )
+
+SQLITE_FILE = os.path.join( os.getenv("DB_FILE_PATH"), os.getenv("DB_FILE_NAME") )
 
 error_code = {
     "1000": {
@@ -73,7 +76,7 @@ def userinfo():
     result["response_data"] = response["data"]
     result["request_body"] = data
 
-    return jsonify(result), error_code[response["code"]]["http_status_code"]
+    return jsonify(result["response_data"]), error_code[response["code"]]["http_status_code"]
 
 
 def userinfo_create( data ):
@@ -216,7 +219,6 @@ def userinfo_delete( data ):
 
     try:
         sql_exec =  cur.execute( sql_query, sql_data )
-        print( sql_exec.rowcount )
         if sql_exec.rowcount == 1:
             result_code = "1003"
             result_data = "User data deleted."
